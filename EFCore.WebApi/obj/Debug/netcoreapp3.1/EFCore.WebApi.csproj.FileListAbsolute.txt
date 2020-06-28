@@ -50,3 +50,7 @@ C:\Projetos\HeroRegistration\EFCore.WebApi\bin\Debug\netcoreapp3.1\Microsoft.Ent
 C:\Projetos\HeroRegistration\EFCore.WebApi\obj\Debug\netcoreapp3.1\EFCore.WebApi.MvcApplicationPartsAssemblyInfo.cache
 C:\Projetos\HeroRegistration\EFCore.WebApi\obj\Debug\netcoreapp3.1\EFCore.WebApi.dll
 C:\Projetos\HeroRegistration\EFCore.WebApi\obj\Debug\netcoreapp3.1\EFCore.WebApi.pdb
+C:\Projetos\HeroRegistration\EFCore.WebApi\bin\Debug\netcoreapp3.1\EFCore.Domain.dll
+C:\Projetos\HeroRegistration\EFCore.WebApi\bin\Debug\netcoreapp3.1\EFCore.Repository.dll
+C:\Projetos\HeroRegistration\EFCore.WebApi\bin\Debug\netcoreapp3.1\EFCore.Domain.pdb
+C:\Projetos\HeroRegistration\EFCore.WebApi\bin\Debug\netcoreapp3.1\EFCore.Repository.pdb
