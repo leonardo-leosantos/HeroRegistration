@@ -12,10 +12,10 @@ using Newtonsoft.Json;
 namespace EFCore.WebApi.Controllers
 {
     [Route("api/[controller]")]
-    public class HeroController : ControllerBase
+    public class ValuesController : ControllerBase
     {
         private readonly HeroiContext _context;
-        public HeroController(HeroiContext context)
+        public ValuesController(HeroiContext context)
         {
             _context = context;
         }
