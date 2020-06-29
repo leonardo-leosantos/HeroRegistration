@@ -25,6 +25,11 @@ namespace EFCore.Repository
             modelBuilder.Entity<HeroiBatalha>(entity =>
                 entity.HasKey(e=> new { e.IdHeroi, e.IdBatalha })
             );
+
+            modelBuilder.Entity<Heroi>()
+            .HasOne(b => b.Identidade)
+            .WithOne(i => i.Heroi)
+            .HasForeignKey<IdentidadeSecreta>(b => b.IdHeroi);
         }
     }
 }
