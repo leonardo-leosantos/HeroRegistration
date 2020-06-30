@@ -12,38 +12,38 @@ namespace EFCore.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class HeroController : ControllerBase
+    public class BattleController : ControllerBase
     {
         private readonly HeroiContext _context;
-        public HeroController(HeroiContext context)
+        public BattleController(HeroiContext context)
         {
             _context = context;
         }
 
-        // GET: api/Hero
+        // GET: api/Battle
         [HttpGet]
         public ActionResult Get()
         {
-            try 
+            try
             {
-                List<Heroi> herois = _context.Herois.ToList();
-                return Ok(herois);
+                List<Batalha> batalhas = _context.Batalhas.ToList();
+                return Ok(batalhas);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex.Message} - {ex.InnerException.Message}");
             }
-            
+
         }
 
-        // GET: api/Hero/New.Guid()
+        // GET: api/Battle/5
         [HttpGet("{id}")]
         public ActionResult Get(Guid id)
         {
             try
             {
-                Heroi heroi = _context.Herois.FirstOrDefault(h => h.Id == id);
-                return Ok(heroi);
+                Batalha batalha = _context.Batalhas.FirstOrDefault(b => b.Id == id);
+                return Ok(batalha);
             }
             catch (Exception ex)
             {
@@ -51,17 +51,17 @@ namespace EFCore.WebApi.Controllers
             }
         }
 
-        // POST: api/Hero
+        // POST: api/Battle
         [HttpPost]
-        public ActionResult Post([FromBody] List<Heroi> heroisModel)
+        public ActionResult Post([FromBody] List<Batalha> batalhasModel)
         {
             try
             {
-                foreach (var heroi in heroisModel)
+                foreach (var batalha in batalhasModel)
                 {
-                    _context.Herois.Add(heroi);
+                    _context.Batalhas.Add(batalha);
                 }
-                
+
                 _context.SaveChanges();
 
                 return Ok();
@@ -70,31 +70,33 @@ namespace EFCore.WebApi.Controllers
             {
                 return BadRequest($"Erro: {ex.Message} - {ex.InnerException.Message}");
             }
+
         }
 
-        // PUT: api/Hero
+        // PUT: api/Battle/5
         [HttpPut]
-        public ActionResult Put([FromBody] Heroi heroiModel)
+        public ActionResult Put([FromBody] Batalha batalhaModel)
         {
             try
             {
-                var heroi = _context.Herois.AsNoTracking().FirstOrDefault(x => x.Id == heroiModel.Id);
+                var batalha = _context.Batalhas.AsNoTracking().FirstOrDefault(x => x.Id == batalhaModel.Id);
 
-                if (heroi != null)
+                if (batalha != null)
                 {
-                    _context.Herois.Update(heroiModel);
+                    _context.Batalhas.Update(batalhaModel);
                     _context.SaveChanges();
 
                     return Ok();
                 }
 
-                return Ok("Heroi não encontrado!");
+                return Ok("Batalha não encontrada!");
 
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex.Message} - {ex.InnerException?.Message}");
             }
+
         }
 
         // DELETE: api/ApiWithActions/5
@@ -103,16 +105,16 @@ namespace EFCore.WebApi.Controllers
         {
             try
             {
-                var heroi = _context.Herois.AsNoTracking().FirstOrDefault(h => h.Id == id);
+                var batalha = _context.Batalhas.AsNoTracking().FirstOrDefault(h => h.Id == id);
 
-                if (heroi != null)
+                if (batalha != null)
                 {
-                    _context.Herois.Remove(heroi);
+                    _context.Batalhas.Remove(batalha);
                     _context.SaveChanges();
 
                     return Ok();
                 }
-                return Ok("Heroi não encontrado!");
+                return Ok("Batalha não encontrada!");
             }
             catch (Exception ex)
             {
