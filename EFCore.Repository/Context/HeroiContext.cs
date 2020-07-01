@@ -23,13 +23,33 @@ namespace EFCore.Repository
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<HeroiBatalha>(entity =>
-                entity.HasKey(e=> new { e.IdHeroi, e.IdBatalha })
+                entity.HasKey(e => new { e.IdHeroi, e.IdBatalha })
             );
 
+            //MAPS//
+
+            //HEROI -> ARMAS
             modelBuilder.Entity<Heroi>()
-            .HasOne(b => b.Identidade)
-            .WithOne(i => i.Heroi)
-            .HasForeignKey<IdentidadeSecreta>(b => b.IdHeroi);
+                        .HasMany(b => b.Armas)
+                        .WithOne()
+                        .HasForeignKey(x=> x.IdHeroi);
+
+            //HEROI -> IDENTIDADE SECRETA
+            modelBuilder.Entity<Heroi>()
+                        .HasOne(b => b.Identidade)
+                        .WithOne(i => i.Heroi)
+                        .HasForeignKey<IdentidadeSecreta>(b => b.IdHeroi);
+
+            //HEROIS_BATALHAS -> muitos p muitos
+            modelBuilder.Entity<HeroiBatalha>()
+                        .HasOne(hb => hb.Heroi)
+                        .WithMany(h => h.HeroiBatalhas)
+                        .HasForeignKey(hb => hb.IdHeroi);
+
+            modelBuilder.Entity<HeroiBatalha>()
+                        .HasOne(hb => hb.Batalha)
+                        .WithMany(b => b.HeroiBatalhas)
+                        .HasForeignKey(hb => hb.IdBatalha);
         }
     }
 }

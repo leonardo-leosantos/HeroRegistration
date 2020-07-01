@@ -7,6 +7,7 @@ using EFCore.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace EFCore.WebApi.Controllers
 {
@@ -27,11 +28,19 @@ namespace EFCore.WebApi.Controllers
             try 
             {
                 List<Heroi> herois = _context.Herois.ToList();
+
+                //foreach (var heroi in herois)
+                //{
+                //    heroi.Armas = _context.Armas.Where(a => a.IdHeroi == heroi.Id).ToList();
+                //    heroi.Identidade = _context.IdentidadesSecretas.FirstOrDefault(i => i.IdHeroi == heroi.Id);
+                //    heroi.HeroiBatalhas = _context.HeroisBatalhas.Where(a => a.IdHeroi == heroi.Id).ToList();
+                //}
+
                 return Ok(herois);
             }
             catch (Exception ex) 
             {
-                return BadRequest($"Erro: {ex.Message} - {ex.InnerException.Message}");
+                return BadRequest($"Erro: {ex.Message} - {ex.InnerException?.Message}");
             }
             
         }

@@ -4,14 +4,16 @@ using EFCore.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFCore.Repository.Migrations
 {
     [DbContext(typeof(HeroiContext))]
-    partial class HeroiContextModelSnapshot : ModelSnapshot
+    [Migration("20200701031911_FK_Heroi_Armas")]
+    partial class FK_Heroi_Armas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,9 +85,17 @@ namespace EFCore.Repository.Migrations
                     b.Property<Guid>("IdBatalha")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("BatalhaId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("HeroiId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("IdHeroi", "IdBatalha");
 
-                    b.HasIndex("IdBatalha");
+                    b.HasIndex("BatalhaId");
+
+                    b.HasIndex("HeroiId");
 
                     b.ToTable("HeroisBatalhas");
                 });
@@ -123,15 +133,11 @@ namespace EFCore.Repository.Migrations
                 {
                     b.HasOne("EFCore.Domain.Batalha", "Batalha")
                         .WithMany("HeroiBatalhas")
-                        .HasForeignKey("IdBatalha")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BatalhaId");
 
                     b.HasOne("EFCore.Domain.Heroi", "Heroi")
                         .WithMany("HeroiBatalhas")
-                        .HasForeignKey("IdHeroi")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("HeroiId");
                 });
 
             modelBuilder.Entity("EFCore.Domain.IdentidadeSecreta", b =>
