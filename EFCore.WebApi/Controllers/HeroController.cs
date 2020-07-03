@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFCore.Domain;
 using EFCore.Repository;
+using EFCore.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,44 +16,20 @@ namespace EFCore.WebApi.Controllers
     [ApiController]
     public class HeroController : ControllerBase
     {
-        private readonly HeroiContext _context;
-        public HeroController(HeroiContext context)
+        private readonly IEFCoreRepository _repository;
+        public HeroController(IEFCoreRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/Hero
         [HttpGet]
-        public ActionResult Get()
-        {
-            try 
-            {
-                List<Heroi> herois = _context.Herois.ToList();
-
-                //foreach (var heroi in herois)
-                //{
-                //    heroi.Armas = _context.Armas.Where(a => a.IdHeroi == heroi.Id).ToList();
-                //    heroi.Identidade = _context.IdentidadesSecretas.FirstOrDefault(i => i.IdHeroi == heroi.Id);
-                //    heroi.HeroiBatalhas = _context.HeroisBatalhas.Where(a => a.IdHeroi == heroi.Id).ToList();
-                //}
-
-                return Ok(herois);
-            }
-            catch (Exception ex) 
-            {
-                return BadRequest($"Erro: {ex.Message} - {ex.InnerException?.Message}");
-            }
-            
-        }
-
-        // GET: api/Hero/New.Guid()
-        [HttpGet("{id}")]
-        public ActionResult Get(Guid id)
+        public async Task<IActionResult> Get()
         {
             try
             {
-                Heroi heroi = _context.Herois.FirstOrDefault(h => h.Id == id);
-                return Ok(heroi);
+                var herois = await _repository.GetAllHerois();
+                return Ok(herois);
             }
             catch (Exception ex)
             {
@@ -60,73 +37,95 @@ namespace EFCore.WebApi.Controllers
             }
         }
 
+        // GET: api/Hero/New.Guid()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            try
+            {
+                var heroi = await _repository.GetHeroiById(id);
+                if (heroi != null)
+                    return Ok(heroi);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erro: {ex.Message} - {ex.InnerException.Message}");
+            }
+
+            return BadRequest("Heroi não encontrada!");
+        }
+
         // POST: api/Hero
         [HttpPost]
-        public ActionResult Post([FromBody] List<Heroi> heroisModel)
+        public async Task<IActionResult> Post([FromBody] List<Heroi> heroisModel)
         {
             try
             {
                 foreach (var heroi in heroisModel)
                 {
-                    _context.Herois.Add(heroi);
+                    _repository.Add(heroi);
                 }
-                
-                _context.SaveChanges();
 
-                return Ok();
+                if (await _repository.SaveChangesAsync())
+                    return Ok();
+
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex.Message} - {ex.InnerException.Message}");
             }
+
+            return BadRequest("Algo deu errado durante a execução!");
         }
 
         // PUT: api/Hero
         [HttpPut]
-        public ActionResult Put([FromBody] Heroi heroiModel)
+        public async Task<IActionResult> Put([FromBody] Heroi heroiModel)
         {
             try
             {
-                var heroi = _context.Herois.AsNoTracking().FirstOrDefault(x => x.Id == heroiModel.Id);
+                var heroi = await _repository.GetHeroiById(heroiModel.Id);
 
                 if (heroi != null)
                 {
-                    _context.Herois.Update(heroiModel);
-                    _context.SaveChanges();
+                    _repository.Update(heroiModel);
 
-                    return Ok();
+                    if (await _repository.SaveChangesAsync())
+                        return Ok();
+
                 }
-
-                return Ok("Heroi não encontrado!");
 
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex.Message} - {ex.InnerException?.Message}");
             }
+            return BadRequest("Algo deu errado durante a execução!");
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             try
             {
-                var heroi = _context.Herois.AsNoTracking().FirstOrDefault(h => h.Id == id);
+                var heroi = await _repository.GetHeroiById(id);
 
                 if (heroi != null)
                 {
-                    _context.Herois.Remove(heroi);
-                    _context.SaveChanges();
+                    _repository.Delete(heroi);
 
-                    return Ok();
+                    if (await _repository.SaveChangesAsync())
+                        return Ok();
                 }
-                return Ok("Heroi não encontrado!");
+                
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex.Message} - {ex.InnerException?.Message}");
             }
+
+            return BadRequest("Algo deu errado durante a execução!");
         }
     }
 }

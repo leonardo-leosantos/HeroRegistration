@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFCore.Domain;
 using EFCore.Repository;
+using EFCore.Repository.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,112 +15,118 @@ namespace EFCore.WebApi.Controllers
     [ApiController]
     public class BattleController : ControllerBase
     {
-        private readonly HeroiContext _context;
-        public BattleController(HeroiContext context)
+        private readonly IEFCoreRepository _repository;
+        public BattleController(IEFCoreRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/Battle
         [HttpGet]
-        public ActionResult Get()
+        public async Task<IActionResult> Get()
         {
             try
             {
-                List<Batalha> batalhas = _context.Batalhas.ToList();
+                var batalhas = await _repository.GetAllBatalhas();
                 return Ok(batalhas);
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex.Message} - {ex.InnerException.Message}");
             }
-
         }
 
         // GET: api/Battle/5
         [HttpGet("{id}")]
-        public ActionResult Get(Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
             try
             {
-                Batalha batalha = _context.Batalhas.FirstOrDefault(b => b.Id == id);
-                return Ok(batalha);
+                var batalha = await _repository.GetBatalhaById(id, true);
+
+                if (batalha != null)
+                    return Ok(batalha);
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex.Message} - {ex.InnerException.Message}");
             }
+            return BadRequest("Batalha não encontrada!");
         }
 
         // POST: api/Battle
         [HttpPost]
-        public ActionResult Post([FromBody] List<Batalha> batalhasModel)
+        public async Task<ActionResult> Post([FromBody] List<Batalha> batalhasModel)
         {
             try
             {
                 foreach (var batalha in batalhasModel)
                 {
-                    _context.Batalhas.Add(batalha);
+                    _repository.Add(batalha);
                 }
 
-                _context.SaveChanges();
+                if(await _repository.SaveChangesAsync())
+                    return Ok();
 
-                return Ok();
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex.Message} - {ex.InnerException.Message}");
             }
 
+            return BadRequest("Algo deu errado durante a execução!");
         }
 
         // PUT: api/Battle/5
         [HttpPut]
-        public ActionResult Put([FromBody] Batalha batalhaModel)
+        public async Task<IActionResult> Put([FromBody] Batalha batalhaModel)
         {
             try
             {
-                var batalha = _context.Batalhas.AsNoTracking().FirstOrDefault(x => x.Id == batalhaModel.Id);
+                var batalha = await _repository.GetBatalhaById(batalhaModel.Id);
 
                 if (batalha != null)
                 {
-                    _context.Batalhas.Update(batalhaModel);
-                    _context.SaveChanges();
+                    _repository.Update(batalha);
 
-                    return Ok();
+                    if (await _repository.SaveChangesAsync())
+                        return Ok();
                 }
-
-                return Ok("Batalha não encontrada!");
 
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex.Message} - {ex.InnerException?.Message}");
             }
+
+            return BadRequest("Algo deu errado durante a execução!");
 
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             try
             {
-                var batalha = _context.Batalhas.AsNoTracking().FirstOrDefault(h => h.Id == id);
+                var batalha = await _repository.GetBatalhaById(id);
 
                 if (batalha != null)
                 {
-                    _context.Batalhas.Remove(batalha);
-                    _context.SaveChanges();
+                    _repository.Delete(batalha);
 
-                    return Ok();
+                    if (await _repository.SaveChangesAsync())
+                        return Ok();
                 }
-                return Ok("Batalha não encontrada!");
+                else
+                    return Ok("Batalha não encontrada!");
             }
             catch (Exception ex)
             {
                 return BadRequest($"Erro: {ex.Message} - {ex.InnerException?.Message}");
             }
+
+            return BadRequest("Algo deu errado durante a execução!");
         }
     }
 }
