@@ -5,9 +5,15 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.WebApi", "EFCore.WebApi\EFCore.WebApi.csproj", "{80E76E30-7CC7-4EAB-AFA9-66E9CCD03465}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.Domain", "EFCore.Domain\EFCore.Domain.csproj", "{2629A743-3B1A-4691-9C29-67EEB6056572}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.Domain", "EFCore.Domain\EFCore.Domain.csproj", "{2629A743-3B1A-4691-9C29-67EEB6056572}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.Repository", "EFCore.Repository\EFCore.Repository.csproj", "{D467486D-D033-478C-B04C-4C25FE791B20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.Repository", "EFCore.Repository\EFCore.Repository.csproj", "{D467486D-D033-478C-B04C-4C25FE791B20}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Domain", "1 - Domain", "{A0188F84-553D-40FB-AFF6-4FD5BFBAA844}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Repository", "2 - Repository", "{3ED8815E-ED3E-4D64-A389-46A49E7B465F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - WebApi", "3 - WebApi", "{A89F9F61-4232-4087-AD2A-0E7BE90ED0E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +36,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{80E76E30-7CC7-4EAB-AFA9-66E9CCD03465} = {A89F9F61-4232-4087-AD2A-0E7BE90ED0E6}
+		{2629A743-3B1A-4691-9C29-67EEB6056572} = {A0188F84-553D-40FB-AFF6-4FD5BFBAA844}
+		{D467486D-D033-478C-B04C-4C25FE791B20} = {3ED8815E-ED3E-4D64-A389-46A49E7B465F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C5F2C2AD-96FE-4AA6-A483-6C3FE3EEE101}
